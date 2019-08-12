@@ -4,13 +4,19 @@ export default class Article extends Sequelize.Model {
   static init(sequelize) {
     let options = {}
     options.sequelize = sequelize
+    options.tableName = "article"
 
     return super.init({
-      subject: {
+      idx: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+      }
+      , subject: {
         type: Sequelize.STRING,
         allowNull: false,
-      },
-      contents: {
+      }
+      , contents: {
         type: Sequelize.TEXT,
         allowNull: false,
       }
@@ -22,7 +28,9 @@ export default class Article extends Sequelize.Model {
       onDelete: "CASCADE",
       foreignKey: {
         allowNull: false
+        , name : 'article_idx'  //target의 foreign key
       }
+      , sourceKey : 'idx'     //source의 key값
     })
   }
 }

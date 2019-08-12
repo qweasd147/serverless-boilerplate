@@ -4,13 +4,19 @@ export default class Comment extends Sequelize.Model {
   static init(sequelize) {
     let options = {}
     options.sequelize = sequelize
+    options.tableName = "comment"
 
     return super.init({
-      subject: {
+      idx: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+      }
+      , subject: {
         type: Sequelize.STRING,
         allowNull: false,
-      },
-      contents: {
+      }
+      , contents: {
         type: Sequelize.TEXT,
         allowNull: false,
       }
@@ -22,7 +28,9 @@ export default class Comment extends Sequelize.Model {
       onDelete: "CASCADE",
       foreignKey: {
         allowNull: false
+        , name : 'article_idx'
       }
+      , targetKey : 'idx'   //fk는 article의 idx를 본다.
     })
   }
 }
