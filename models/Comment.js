@@ -3,8 +3,6 @@ import Sequelize from 'sequelize'
 export default class Comment extends Sequelize.Model {
   static init(sequelize) {
     let options = {}
-    options.sequelize = sequelize
-    options.tableName = "comment"
 
     return super.init({
       idx: {
@@ -20,7 +18,14 @@ export default class Comment extends Sequelize.Model {
         type: Sequelize.TEXT,
         allowNull: false,
       }
-    }, options)
+      , articleIdx: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+      }
+    }, {
+      sequelize
+      , tableName : 'comment'
+    })
   }
 
   static associate(models) {
@@ -28,7 +33,7 @@ export default class Comment extends Sequelize.Model {
       onDelete: "CASCADE",
       foreignKey: {
         allowNull: false
-        , name : 'article_idx'
+        , name : 'articleIdx'
       }
       , targetKey : 'idx'   //fk는 article의 idx를 본다.
     })

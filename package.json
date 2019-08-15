@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "db.sync": "babel-node ./models/db/sync.js"
+    , "createTest": "babel-node ./crud.js"
   },
   "dependencies": {
     "mariadb": "^2.1.0",

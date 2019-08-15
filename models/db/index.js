@@ -1,6 +1,3 @@
-//const Sequelize = require('sequelize');
-//const config = require('../../config');
-
 import Sequelize from 'sequelize'
 import config from '../../config'
 
@@ -25,6 +22,7 @@ const sequelizeConn = new Sequelize(name, userId, password, {
       , timestamps: false       //모든 테이블에 createAt, updateAt 추가되는거 막기
       , underscored: true       //기본 snake_case로 변경
   }
+  , logging: console.log
 });
 
 export default sequelizeConn;
