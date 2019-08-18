@@ -3,7 +3,7 @@ import {models} from './models';
 const {
     Article
     , Comment
-} = models
+} = models;
 
 const create = async()=>{
     
@@ -13,9 +13,11 @@ const create = async()=>{
     });
     */
 
-    const article = await Article.findByPk(1);
-
-    console.log(article.idx);
+    //const article = await Article.findByPk(1);
+    const article = await Article.create({
+        subject : 'article subject'
+        , contents : 'article content'
+    });
 
     const comment = Comment.build({
         subject : 'Comment subject...'
@@ -28,7 +30,13 @@ const create = async()=>{
     await article.addComments();
 }
 
-create();
+const createPost = async()=>{
+
+    const article = await Article.create({
+        subject : 'subject...'
+        , contents : 'contents...'
+    });
+}
 
 export {
     create

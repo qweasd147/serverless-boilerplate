@@ -4,8 +4,10 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "db.sync": "babel-node ./models/db/sync.js"
-    , "createTest": "babel-node ./crud.js"
+    "db.sync.local": "cross-env NODE_ENV=development babel-node ./models/db/sync.js",
+    "testWithsls": "sls invoke local -f create",
+    "deploy.prod": "sls deploy --env production",
+    "deploy.stage.prod": "sls deploy --env production --stage production"
   },
   "dependencies": {
     "mariadb": "^2.1.0",
@@ -13,7 +15,18 @@
     "sequelize": "^5.13.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
     "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.7.0"
+    "babel-loader": "^8.0.6",
+    "babel-preset-env": "^1.7.0",
+    "babel-plugin-source-map-support": "^2.1.1",
+    "serverless-offline": "^5.10.1",
+    "serverless-webpack": "^5.3.1",
+    "webpack": "^4.39.2",
+    "webpack-node-externals": "^1.7.2",
+    "serverless": "^1.50.0",
+    "serverless-dotenv-plugin": "^2.1.1"
   }
 }

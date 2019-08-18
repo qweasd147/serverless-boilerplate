@@ -1,9 +1,8 @@
 import Sequelize from 'sequelize'
-import config from '../../config'
 
 const {
     host, port, dialect, name, userId, password,
-} = config.db
+} = process.env
 
 const sequelizeConn = new Sequelize(name, userId, password, {
   host: host

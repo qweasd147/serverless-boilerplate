@@ -22,6 +22,25 @@ service: serverless-boilerplate
 provider:
   name: aws
   runtime: nodejs10.x
+  #stage: ${opt:stage, 'development'} # -s 옵션을 받으면 사용하고, 그렇지 않으면 기본 development 스테이지 사용
+  stage: ${env:STAGE}
+
+#package: # Optional deployment packaging configuration
+#  include: # Specify the directories and files which should be included in the deployment package
+#    - models/**
+
+# serverless-webpack 플러그인을 사용하여 ES6을 가로 채기
+plugins:
+  - serverless-webpack
+  - serverless-offline
+  - serverless-dotenv-plugin
+
+# serverless-webpack 구성
+# 외부 모듈에 대한 패키징 자동화 활성화
+custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
 
 # you can overwrite defaults here
 #  stage: dev
@@ -59,6 +78,8 @@ provider:
 functions:
   hello:
     handler: handler.hello
+  create:
+    handler: crud.create
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
