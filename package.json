@@ -4,8 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "db.sync.local": "cross-env NODE_ENV=development babel-node ./models/db/sync.js",
-    "testWithsls": "sls invoke local -f create",
+    "db.sync.temp": "cross-env NODE_ENV=development babel-node ./models/db/sync.js",
+    "db.sync.local": "sls invoke local -f dbSync",
+    "createTest": "sls invoke local -f create",
     "deploy.prod": "sls deploy --env production",
     "deploy.stage.prod": "sls deploy --env production --stage production"
   },
@@ -18,7 +19,6 @@
     "@babel/cli": "^7.5.5",
     "@babel/core": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
-    "babel-cli": "^6.26.0",
     "babel-loader": "^8.0.6",
     "babel-preset-env": "^1.7.0",
     "babel-plugin-source-map-support": "^2.1.1",

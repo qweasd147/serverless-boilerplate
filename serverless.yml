@@ -23,7 +23,7 @@ provider:
   name: aws
   runtime: nodejs10.x
   #stage: ${opt:stage, 'development'} # -s 옵션을 받으면 사용하고, 그렇지 않으면 기본 development 스테이지 사용
-  stage: ${env:STAGE}
+  stage: ${env:STAGE, 'development'}
 
 #package: # Optional deployment packaging configuration
 #  include: # Specify the directories and files which should be included in the deployment package
@@ -76,8 +76,8 @@ custom:
 #    - exclude-me-dir/**
 
 functions:
-  hello:
-    handler: handler.hello
+  dbSync:
+    handler: handler.dbSync
   create:
     handler: crud.create
 #    The following are a few example events you can configure
