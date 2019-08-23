@@ -40,7 +40,9 @@ plugins:
 custom:
   webpack:
     webpackConfig: ./webpack.config.js
-    includeModules: true
+    includeModules:
+      forceInclude:
+        - mysql2
 
 # you can overwrite defaults here
 #  stage: dev

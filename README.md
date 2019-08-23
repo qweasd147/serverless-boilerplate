@@ -1,10 +1,14 @@
 # serverless-boilerplate
 serverless-boilerplate with sequelize
+----
 
 # 1. Serverless
 
-서버 상태를 전혀 고려하지 않아도 된다는 취지로 만들어 졌지만 성능을 위해서라면 memory는 신경써야 한다는 안타까운 점이 존재.
+서버 자원을 전혀 고려하지 않아도 된다는 취지로 만들어 졌지만 aws를 기준으로 성능을 위해서라면 memory용량을 늘리고 memory 용량을 늘려야 cpu 성능이 좋아져, 이러한 점도 신경써야 한다는 안타까운 점이 존재.
 (aws만 그런지 다른 서비스도 그런지는 모르겠음)
+
+안타까운점이 있지만 일정시간 이상 람다 트리거가 발동하지 않으면 `idle`상태로 빠지고 이러한 점 때문인지 일반적으로 `ec2`로 인스턴스를 올리는것보다 비용이 싸게 먹힌다고 한다.
+단, 람다는 요청 단위로 과금이 결정되서 비교가 힘들긴 하지만 요청이 많으면 `ec2`보다 훨씬 비싸다고 한다.
 
 개념적인건 뭐 지나가고 개발하면서 발견한 유용한 플러그인 등을 소개
 
@@ -21,6 +25,19 @@ serverless-boilerplate with sequelize
 일반적으로 `Lambda`는 `console.log`같은걸 쓰면 알아서 `cloudwatch logs`에 남긴다. 근데 이게 개발하면서 디버깅용 로그를 사용할때가 분명 많을 것이다. 하지만 일단 `console.log`를 사용하면 무조건 `cloudwatch logs`에 남는다. 그렇다고 개발 이후에 로그를 남긴 소스를 주석처리하기도 쫌 그렇다... 테스트는 안해봤지만 info, warn, error 등도 남을 것이고, debug는 모르겠다. 아무튼 각 로그 레벨 설정에 따른 로그를 남기고 싶을땐 예전 nodejs로 개발할때는 `winston`을 사용했었는데 `serverless` 플러그인 중에도 `winston-cloudwatch`가 있었다.
 
 하지만 뭔가 셋팅이 점점 늘어나, serverless framework를 쓰면서 특정 모듈별 간편하게 개발하는 기분이 들지 않아서 사용해보진 않았다. 규모가 쫌 커지면 그때 사용을 고려해볼 예정이다.
+
+### 1.4 include modules
+작업하면서 로컬환경에서는 잘 작동하는데 aws에 배포하기만 하면 `mysql2` 모듈을 찾을 수 없다고 나온다. 이는 아마도 배포되면서 `Code-Splitting`이 이루어지고, `mysql2` 모듈은 사용하지 않아서 함께 배포가 되지 않는듯 싶다(`mysql2` 모듈은 설정값에 따라 동적으로 불러온다). 이러한 버그를 방지하기 위해서 강제적으로 배포 되도록 설정이 필요하다.
+
+`serverless.yml`
+```
+custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules:
+      forceInclude:
+        - mysql2
+```
 
 # 2. Sequelize
 공부할 맘 없었는데 어쩌다 보니까 하게됨 ... 다른 `orm`(`jpa`)을 먼저 써보니 고만고만하게 느껴져서, 개인적으로 느낀 중요한 차이점만 작성해볼 예정
