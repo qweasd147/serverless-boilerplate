@@ -42,7 +42,7 @@ custom:
     webpackConfig: ./webpack.config.js
     includeModules:
       forceInclude:
-        - mysql2
+        - mariadb
 
 # you can overwrite defaults here
 #  stage: dev
