@@ -42,7 +42,7 @@ custom:
     webpackConfig: ./webpack.config.js
     includeModules:
       forceInclude:
-        - mariadb
+        - mysql2
 
 # you can overwrite defaults here
 #  stage: dev
@@ -82,6 +82,14 @@ functions:
     handler: handler.dbSync
   create:
     handler: crud.create
+  app:
+    handler: WrapServerless.handler
+    events:
+      - http: ANY /
+      - http: ANY {proxy+}
+    cors:
+      origin: '*'
+
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
