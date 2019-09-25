@@ -1,0 +1,38 @@
+{
+  "name": "serverless-boilerplate",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "db.sync.temp": "cross-env NODE_ENV=development babel-node ./models/db/sync.js",
+    "db.sync.local": "sls invoke local -f dbSync",
+    "createTest": "sls invoke local -f create",
+    "deploy.prod": "sls deploy --env production",
+    "deploy.stage.prod": "sls deploy --env production --stage production",
+    "start.local": "sls offline"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mariadb": "^2.1.0",
+    "mysql2": "^1.6.5",
+    "sequelize": "^5.13.0",
+    "serverless-http": "^2.3.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel-cli": "^6.26.0",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-source-map-support": "^2.1.1",
+    "babel-preset-env": "^1.7.0",
+    "serverless": "^1.50.0",
+    "serverless-dotenv-plugin": "^2.1.1",
+    "serverless-offline": "^5.10.1",
+    "serverless-webpack": "^5.3.1",
+    "webpack": "^4.39.2",
+    "webpack-node-externals": "^1.7.2"
+  }
+}
