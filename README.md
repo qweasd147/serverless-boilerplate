@@ -26,7 +26,11 @@ serverless-boilerplate with sequelize
 
 하지만 뭔가 셋팅이 점점 늘어나, serverless framework를 쓰면서 특정 모듈별 간편하게 개발하는 기분이 들지 않아서 사용해보진 않았다. 규모가 쫌 커지면 그때 사용을 고려해볼 예정이다.
 
-### 1.1.4 include modules
+### 1.1.4 이진 데이터 지원(파일)
+기본적으로 multipart로 파일을 보내면 `API Gateway`에서 지원을 하지 않아서 처리가 불가능하다. 별도로 `API Gateway`에 들어가서 파일을 이진 데이터 형태로 지원하게끔 설정할 수도 있지만 이를 plugin을 설치 & 셋팅해서 배포하면서 그냥 한번에 셋팅 되도록 할 수도 있다. `serverless-apigw-binary` 검색
+
+
+### 1.1.5 include modules
 작업하면서 로컬환경에서는 잘 작동하는데 aws에 배포하기만 하면 `mysql2` 모듈을 찾을 수 없다고 나온다. 이는 아마도 배포되면서 `Code-Splitting`이 이루어지고, `mysql2` 모듈은 사용하지 않아서 함께 배포가 되지 않는듯 싶다(`mysql2` 모듈은 설정값에 따라 동적으로 불러온다). 이러한 버그를 방지하기 위해서 강제적으로 배포 되도록 설정이 필요하다.
 
 `serverless.yml`
