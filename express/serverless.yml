@@ -43,6 +43,7 @@ custom:
     includeModules:
       forceInclude:
         - mariadb
+        - serverless-http
 
 # you can overwrite defaults here
 #  stage: dev
