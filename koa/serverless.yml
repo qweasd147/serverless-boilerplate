@@ -24,6 +24,8 @@ provider:
   runtime: nodejs10.x
   #stage: ${opt:stage, 'development'} # -s 옵션을 받으면 사용하고, 그렇지 않으면 기본 development 스테이지 사용
   stage: ${env:STAGE, 'development'}
+  apiKeys:
+    - ${opt:stage}-use-key
 
 #package: # Optional deployment packaging configuration
 #  include: # Specify the directories and files which should be included in the deployment package
@@ -85,9 +87,17 @@ functions:
     handler: crud.create
   app:
     handler: WrapServerless.handler
+    #events:
+    #  - http: ANY /
+    #  - http: ANY {proxy+}
     events:
-      - http: ANY /
-      - http: ANY {proxy+}
+      - http: 
+          method: get
+          path: /{proxy+}
+      - http: 
+          method: post
+          path: /{proxy+}
+          private: true
     cors:
       origin: '*'
 
