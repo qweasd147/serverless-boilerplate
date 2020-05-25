@@ -18,7 +18,7 @@
     "koa-router": "^7.4.0",
     "mariadb": "^2.1.0",
     "mysql2": "^1.6.5",
-    "sequelize": "^5.13.0",
+    "sequelize": "^5.15.1",
     "serverless-http": "^2.3.0"
   },
   "devDependencies": {
