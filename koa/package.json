@@ -9,7 +9,7 @@
     "createTest": "sls invoke local -f create",
     "deploy.prod": "sls deploy --env production",
     "deploy.stage.prod": "sls deploy --env production --stage production",
-     "start.local": "sls offline"
+    "start.local": "sls offline"
   },
   "dependencies": {
     "@koa/cors": "^3.0.0",
