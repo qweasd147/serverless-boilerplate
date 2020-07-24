@@ -23,6 +23,7 @@
 ec2처럼 그냥 돈이 계속 나가기 때문에 좋은건지 모르겠다(이쯤 되면 ec2도 한번쯤 생각해봐야 한다고 생각) 물론 `auto scaling` 엄청 좋긴하지만
 
 **TODO**
+
 servlerless로 Provisioned Concurrency 핸들링
 
 ### 3. API Gateway를 통한 제한
