@@ -1,0 +1,93 @@
+service: cognito
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${opt:stage, 'development'}
+  tracing:
+    apiGateway: true
+    lambda: true
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "cognito-sync:*"
+        - "cognito-idp:*"
+      Resource:
+        Fn::Join:
+          [
+            "",
+            [
+              "arn:aws:cognito-idp:",
+              { "Ref": "AWS::Region" },
+              ":",
+              { Ref: "AWS::AccountId" },
+              ":",
+              "userpool/*",
+            ],
+          ]
+
+plugins:
+  - serverless-webpack
+  - serverless-offline
+  - serverless-dotenv-plugin
+
+custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules:
+      - serverless-http
+
+functions:
+  app:
+    handler: WrapServerless.handler
+    events:
+      - http: ANY /
+      - http: ANY {proxy+}
+    cors:
+      origin: "*"
+    environment:
+      USER_POOL_ID: !Ref CognitoUserPool
+      USER_POOL_CLIENT_ID: !Ref CognitoUserPoolClient
+  migration:
+    handler: triggers/migration.main
+    environment:
+      USER_POOL_ID: !Ref CognitoUserPool
+      USER_POOL_CLIENT_ID: !Ref CognitoUserPoolClient
+    #events:
+    #  - cognitoUserPool:
+    #    pool: !Ref CognitoUserPool
+    #trigger: PreAuthentication
+    #    trigger: UserMigration
+    #    existing: true
+
+resources:
+  Resources:
+    CognitoUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: auth-user-pool
+        UsernameAttributes:
+          - email
+        AutoVerifiedAttributes:
+          - email
+        Policies:
+          PasswordPolicy:
+            MinimumLength: 6
+            RequireLowercase: False
+            RequireNumbers: False
+            RequireSymbols: False
+            RequireUppercase: False
+
+    CognitoUserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: auth-user-pool-client
+        UserPoolId:
+          Ref: CognitoUserPool
+        GenerateSecret: false
+        ExplicitAuthFlows:
+          - ALLOW_ADMIN_USER_PASSWORD_AUTH
+          - ALLOW_CUSTOM_AUTH
+          - ALLOW_REFRESH_TOKEN_AUTH
+          - ALLOW_USER_SRP_AUTH
+        PreventUserExistenceErrors: ENABLED
