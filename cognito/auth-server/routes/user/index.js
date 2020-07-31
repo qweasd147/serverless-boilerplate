@@ -13,7 +13,9 @@ const userErrHandler = (fn) => async (ctx, next) => {
 
     const status = errors?.[errCode]?.status;
 
-    ctx.status = status || 500;
+    if (!status) throw err;
+
+    ctx.status = status;
     ctx.body = {
       message: err.message,
     };

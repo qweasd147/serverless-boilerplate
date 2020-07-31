@@ -2,7 +2,6 @@
   "name": "cognito",
   "version": "1.0.0",
   "description": "",
-  "main": "handler.js",
   "scripts": {
     "start.local": "sls offline --env development --stage development",
     "app.deploy": "sls deploy --env development --stage v1 --region ap-northeast-2",
