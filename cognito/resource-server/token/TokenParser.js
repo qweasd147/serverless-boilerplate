@@ -1,6 +1,7 @@
 import * as jsonwebtoken from "jsonwebtoken";
 import jwkToPem from "jwk-to-pem";
 import fetch from "node-fetch";
+import { callbackify } from "util";
 
 const { COGNITO_USER_POOL_ID, REGION } = process.env;
 
@@ -23,7 +24,7 @@ const getJWKS = async () => {
       jwk,
       pem,
     };
-  }) || {};
+  });
 
   cachedJWKS = tempJWKS;
 
@@ -61,8 +62,7 @@ const parseToClaim = async (token) => {
     const tokenHeader = JSON.parse(decodedHeader);
     const pem = jwks[tokenHeader?.kid]?.pem;
 
-    if (Object.keys(pem).length === 0)
-      throw new Error("pem값을 찾을수 없습니다.");
+    if (!pem) throw new Error("pem값을 찾을수 없습니다.");
 
     return await RS256TokenVerify(token, pem);
   } catch (err) {
@@ -73,9 +73,9 @@ const parseToClaim = async (token) => {
 };
 
 const validateClaim = (claim) => {
-  const currentSeconds = Math.floor(new Date().valueOf() / 1000);
-
   /*
+  const currentSeconds = Math.floor(new Date().valueOf() / 1000);
+  
   jsonwebtoken.verify에서 검증된다.
   if (currentSeconds > claim.exp || currentSeconds < claim.auth_time) {
     throw new Error("claim is expired or invalid");
@@ -90,5 +90,4 @@ const validateClaim = (claim) => {
     throw new Error("claim use is not id token");
   }
 };
-
-export default { verifiedClaim };
+export default { verifiedClaim: callbackify(verifiedClaim) };
