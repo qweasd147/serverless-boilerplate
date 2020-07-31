@@ -1,0 +1,37 @@
+{
+  "name": "resource-server",
+  "version": "1.0.0",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "start.local": "sls offline --env development --stage development",
+    "app.deploy": "sls deploy --env development --stage v1 --region ap-northeast-2",
+    "app.remove": "sls remove --env development --stage v1 --region ap-northeast-2"
+  },
+  "dependencies": {
+    "@koa/cors": "^3.1.0",
+    "jwk-to-pem": "^2.0.4",
+    "koa": "^2.13.0",
+    "koa-body": "^4.2.0",
+    "koa-router": "^9.1.0",
+    "node-fetch": "^2.6.0",
+    "serverless-http": "^2.5.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.10.5",
+    "@babel/core": "^7.10.5",
+    "@babel/node": "^7.10.5",
+    "@babel/plugin-proposal-optional-chaining": "^7.10.4",
+    "@babel/preset-env": "^7.10.4",
+    "babel-loader": "^8.1.0",
+    "babel-plugin-source-map-support": "^2.1.2",
+    "babel-preset-env": "^1.7.0",
+    "serverless": "^1.75.1",
+    "serverless-dotenv-plugin": "^2.4.2",
+    "serverless-offline": "^6.5.0",
+    "serverless-webpack": "^5.3.2",
+    "webpack": "^4.43.0",
+    "webpack-node-externals": "^2.5.0"
+  }
+}

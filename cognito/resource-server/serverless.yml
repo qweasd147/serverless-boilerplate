@@ -1,0 +1,64 @@
+service: resource-server
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  tracing:
+    apiGateway: true
+    lambda: true
+
+plugins:
+  - serverless-webpack
+  - serverless-offline
+  - serverless-dotenv-plugin
+
+custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules:
+      - serverless-http
+
+functions:
+  app:
+    handler: WrapServerless.handler
+    #events:
+    #  - http: ANY /
+    #  - http: ANY {proxy+}
+    events:
+      - http:
+          method: get
+          path: /{proxy+}
+      - http:
+          method: post
+          path: /{proxy+}
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
+      - http:
+        method: get
+        path: /api/users/me
+        authorizer:
+          type: COGNITO_USER_POOLS
+          authorizerId:
+            Ref: ApiGatewayAuthorizer
+    cors:
+      origin: "*"
+
+resources:
+  Resources:
+    ApiGatewayRestApi:
+      Type: AWS::ApiGateway::RestApi
+      Properties:
+        Name: ${opt:stage}-resource-server
+    ApiGatewayAuthorizer:
+      Type: AWS::ApiGateway::Authorizer
+      Properties:
+        AuthorizerResultTtlInSeconds: 300
+        IdentitySource: method.request.header.Authorization
+        Name: ${opt:stage}-authorizer
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        Type: COGNITO_USER_POOLS
+        ProviderARNs:
+          - ${env:COGNITO_ARN}
