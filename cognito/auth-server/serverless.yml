@@ -65,7 +65,7 @@ resources:
     CognitoUserPool:
       Type: AWS::Cognito::UserPool
       Properties:
-        UserPoolName: auth-user-pool
+        UserPoolName: ${opt:stage}-auth-user-pool
         UsernameAttributes:
           - email
         AutoVerifiedAttributes:
@@ -81,7 +81,7 @@ resources:
     CognitoUserPoolClient:
       Type: AWS::Cognito::UserPoolClient
       Properties:
-        ClientName: auth-user-pool-client
+        ClientName: ${opt:stage}-auth-user-pool-client
         UserPoolId:
           Ref: CognitoUserPool
         GenerateSecret: false

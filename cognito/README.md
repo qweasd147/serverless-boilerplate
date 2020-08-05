@@ -36,6 +36,14 @@ $ cd resource-server
 $ yarn app.deploy
 ```
 
+### trigger 연결
+
+먼저 `serverless.yml` 설정파일을 통해 trigger 연결을 하려고 시도해봤지만 연동이 계속 실패하여서 일단 수동으로 trigger 연결
+
+`cognito`->`${stage}-auth-user-pool`->`일반 설정`->`트리거`로 이동
+
+`사용자 마이그레이션` 섹션에서 Lambda 함수 `cognito-${stage}-migration`를 연결
+
 ## API
 
 위 스크립트 그대로 사용했으면 `stage`값은 `v1`이 되고, `domain`값은 배포 시 출력 되는 값 확인
