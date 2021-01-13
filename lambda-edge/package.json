@@ -1,0 +1,17 @@
+{
+  "name": "lambda-edge",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "deploy.dev": "sls deploy --stage development",
+    "postinstall": "rm -rf node_modules/sharp && SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install --arch=x64 --platform=linux sharp"
+  },
+  "dependencies": {
+    "image-size": "^0.9.3",
+    "sharp": "^0.27.0"
+  },
+  "devDependencies": {
+    "serverless-lambda-edge-pre-existing-cloudfront": "^1.1.5"
+  }
+}
