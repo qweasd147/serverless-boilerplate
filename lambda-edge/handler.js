@@ -6,6 +6,14 @@ const AWS = require("aws-sdk");
 const sizeOf = require("image-size");
 const Sharp = require("sharp");
 
+const SUPPORT_IMAGE_EXT = {
+  jpg: "jpeg", // sharp에서는 jpg 대신 jpeg사용
+  jpeg: "jpeg",
+  png: "png",
+  webp: "webp", //차후 서포트할 예정
+  default: "jpeg",
+};
+
 module.exports.hello = async (event, context, callback) => {
   const { request, response } = event.Records[0].cf;
   const params = querystring.parse(request.querystring);
@@ -23,7 +31,7 @@ module.exports.hello = async (event, context, callback) => {
   const targetSize = parseSizeParams(params);
 
   if (!targetSize.width && !!targetSize.height) {
-    console.log("사이즈 잘못됨");
+    console.log(`사이즈 잘못됨 ${JSON.stringify(params)}`);
     return callback(null, response);
   }
 
@@ -40,15 +48,15 @@ module.exports.hello = async (event, context, callback) => {
     }).promise();
 
     const originImageInfo = sizeOf(s3Object.Body);
-
-    // sharp에서는 jpg 대신 jpeg사용
     const originFormat = originImageInfo.type;
-    const requiredFormat = originFormat === "jpg" ? "jpeg" : originFormat; // 썸네일 기본으로 jpeg 포맷
+
+    const resizedFormat =
+      SUPPORT_IMAGE_EXT[originFormat] || SUPPORT_IMAGE_EXT.default;
     const size = fitSize(targetSize, originImageInfo);
 
     const resizedImage = await Sharp(s3Object.Body)
       .resize(size.width, size.height)
-      .toFormat(requiredFormat)
+      .toFormat(resizedFormat)
       .toBuffer();
 
     response.status = 200;
@@ -56,7 +64,7 @@ module.exports.hello = async (event, context, callback) => {
     response.bodyEncoding = "base64";
     response.headers = {
       "content-type": [
-        { key: "Content-Type", value: `image/${requiredFormat}` },
+        { key: "Content-Type", value: `image/${resizedFormat}` },
       ],
     };
 

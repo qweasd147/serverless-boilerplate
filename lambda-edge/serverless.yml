@@ -45,7 +45,7 @@ functions:
           # ---- Mandatory Properties -----
           distributionId: ${self:custom.config.${self:custom.stage}.DISTRIBUTION_ID} # CloudFront distribution ID you want to associate
           eventType: origin-response # Choose event to trigger your Lambda function, which are `viewer-request`, `origin-request`, `origin-response` or `viewer-response`
-          pathPattern: "/images/*" # Specifying the CloudFront behavior
+          pathPattern: ${self:custom.config.${self:custom.stage}.BUCKET_PATH} # Specifying the CloudFront behavior
           includeBody: false
 
 resources:
@@ -78,7 +78,7 @@ resources:
                     - logs:CreateLogStream
                     - logs:PutLogEvents
                   Resource:
-                    - "arn:aws:s3:::${self:custom.config.${self:custom.stage}.BUCKET_NAME}/images/*"
+                    - "arn:aws:s3:::${self:custom.config.${self:custom.stage}.BUCKET_NAME}${self:custom.config.${self:custom.stage}.BUCKET_PATH}"
                     - "arn:aws:logs:*:*:*"
                     - "arn:aws:iam::*:role/*"
                     - "arn:aws:lambda:::function:${self:custom.stage}ImageResizeOriginResponse"
