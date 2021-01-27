@@ -6,13 +6,21 @@ const AWS = require("aws-sdk");
 const sizeOf = require("image-size");
 const Sharp = require("sharp");
 
+//JPEG, PNG, WebP, AVIF, TIFF, GIF (input) and SVG
+//sharp 에서 지원해주는 이미지 포맷
 const SUPPORT_IMAGE_EXT = {
   jpg: "jpeg", // sharp에서는 jpg 대신 jpeg사용
   jpeg: "jpeg",
   png: "png",
   webp: "webp", //차후 서포트할 예정
+  avif: "avif",
+  tiff: "tiff",
+  gif: "gif",
+  svg: "svg",
   default: "jpeg",
 };
+
+const ONE_MEGA_BYTE = 1 * 1024 * 1024;
 
 module.exports.hello = async (event, context, callback) => {
   const { request, response } = event.Records[0].cf;
@@ -29,12 +37,6 @@ module.exports.hello = async (event, context, callback) => {
   const { BUCKET_NAME, BUCKET_REGION } = getConfig(stage.value);
 
   const targetSize = parseSizeParams(params);
-
-  if (!targetSize.width && !!targetSize.height) {
-    console.log(`사이즈 잘못됨 ${JSON.stringify(params)}`);
-    return callback(null, response);
-  }
-
   const S3 = new AWS.S3({ region: BUCKET_REGION });
 
   const uri = request.uri;
@@ -54,10 +56,26 @@ module.exports.hello = async (event, context, callback) => {
       SUPPORT_IMAGE_EXT[originFormat] || SUPPORT_IMAGE_EXT.default;
     const size = fitSize(targetSize, originImageInfo);
 
+    if (!size.width || !size.height) {
+      console.log(
+        `사이즈 잘못됨 ${JSON.stringify(params)} - ${JSON.stringify(size)}`
+      );
+      return callback(null, response);
+    }
+
     const resizedImage = await Sharp(s3Object.Body)
       .resize(size.width, size.height)
       .toFormat(resizedFormat)
       .toBuffer();
+
+    const imageSize = Buffer.byteLength(resizedImage, "base64"); //byte
+    console.log("byteLength: ", resizedImageByteLength);
+
+    // `response.body`가 변경된 경우 1MB까지만 허용됩니다.
+    if (imageSize >= ONE_MEGA_BYTE) {
+      console.error(`이미지 사이즈가 너무 큼 ${originalKey} - ${imageSize}`);
+      return callback(null, response);
+    }
 
     response.status = 200;
     response.body = resizedImage.toString("base64");
