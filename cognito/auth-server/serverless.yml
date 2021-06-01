@@ -50,12 +50,11 @@ functions:
       USER_POOL_CLIENT_ID: !Ref CognitoUserPoolClient
   migration:
     handler: triggers/migration.main
-    environment:
-      USER_POOL_ID: !Ref CognitoUserPool
-      USER_POOL_CLIENT_ID: !Ref CognitoUserPoolClient
-    #events:
-    #  - cognitoUserPool:
-    #    pool: !Ref CognitoUserPool
+    events:
+      - cognitoUserPool:
+          pool: ${opt:stage}-auth-user-pool
+          trigger: UserMigration
+          existing: true
     #trigger: PreAuthentication
     #    trigger: UserMigration
     #    existing: true
