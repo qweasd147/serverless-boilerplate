@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "image-size": "^0.9.3",
-    "sharp": "^0.27.0"
+    "sharp": "^0.30.5"
   },
   "devDependencies": {
     "serverless-lambda-edge-pre-existing-cloudfront": "^1.1.5"
